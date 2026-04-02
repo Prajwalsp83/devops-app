@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Hello mfs 🚀 Version 2');
+  res.send('Hello psp 🚀 Version 2');
 });
 
 app.listen(3000, () => {
