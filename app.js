@@ -3,22 +3,26 @@ const app = express();
 
 const projects = [
   {
-    name: "🚀 DevOps CI/CD Pipeline",
-    desc: "Automated CI/CD using GitHub Actions, Docker & AWS",
+    name: "🚀 CI/CD Pipeline",
+    desc: "GitHub Actions + Docker + AWS automation",
+    img: "https://images.unsplash.com/photo-1605902711622-cfb43c4437d1"
   },
   {
-    name: "☸️ Kubernetes on EKS",
-    desc: "Deployed scalable application using AWS EKS",
+    name: "☸️ Kubernetes Deployment",
+    desc: "Deployed scalable app on AWS EKS",
+    img: "https://images.unsplash.com/photo-1629654297299-c8506221ca97"
   },
   {
-    name: "🏗 Terraform Infrastructure",
-    desc: "Provisioned AWS infra using Infrastructure as Code",
-  },
+    name: "🏗 Terraform Infra",
+    desc: "Provisioned infrastructure using Terraform",
+    img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31"
+  }
 ];
 
 function generateProjects() {
   return projects.map(p => `
     <div class="project-card">
+      <img src="${p.img}" />
       <h3>${p.name}</h3>
       <p>${p.desc}</p>
     </div>
@@ -35,80 +39,83 @@ app.get("/", (req, res) => {
       body {
         margin: 0;
         font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(-45deg, #020617, #0f172a, #1e293b, #020617);
-        background-size: 400% 400%;
-        animation: gradient 10s ease infinite;
         color: white;
-        text-align: center;
+        overflow-x: hidden;
+        background: linear-gradient(270deg, #0ea5e9, #9333ea, #22c55e, #f59e0b);
+        background-size: 800% 800%;
+        animation: gradientMove 12s ease infinite;
       }
 
-      @keyframes gradient {
+      @keyframes gradientMove {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
       }
 
       .container {
-        padding: 50px 20px;
+        text-align: center;
+        padding: 40px 20px;
       }
 
       h1 {
         font-size: 3.5rem;
-        color: #38bdf8;
-        animation: fadeDown 1s ease;
+        margin-bottom: 10px;
       }
 
       h2 {
-        color: #94a3b8;
-        margin-bottom: 30px;
+        color: #e2e8f0;
       }
 
-      .tagline {
-        font-size: 1.2rem;
-        margin-bottom: 40px;
-        color: #cbd5f5;
-      }
-
-      .section {
-        margin: 40px auto;
-        max-width: 900px;
+      .profile-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 20px;
+        border: 4px solid white;
       }
 
       .card {
-        background: rgba(30, 41, 59, 0.8);
-        padding: 25px;
-        border-radius: 15px;
-        margin: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        background: rgba(0,0,0,0.4);
         backdrop-filter: blur(10px);
-        transition: 0.3s;
-      }
-
-      .card:hover {
-        transform: translateY(-10px) scale(1.02);
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 15px;
+        width: 85%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       }
 
       .skills span {
         display: inline-block;
         margin: 8px;
         padding: 8px 15px;
-        background: #38bdf8;
+        background: white;
         color: black;
         border-radius: 20px;
         font-weight: bold;
       }
 
       .project-card {
-        background: #1e293b;
-        margin: 15px;
-        padding: 20px;
+        background: rgba(0,0,0,0.5);
+        margin: 20px;
+        padding: 15px;
         border-radius: 12px;
         transition: 0.3s;
       }
 
+      .project-card img {
+        width: 100%;
+        border-radius: 10px;
+      }
+
       .project-card:hover {
-        background: #334155;
         transform: scale(1.05);
+      }
+
+      iframe {
+        width: 90%;
+        height: 400px;
+        border-radius: 12px;
+        margin-top: 20px;
       }
 
       .btn {
@@ -116,33 +123,20 @@ app.get("/", (req, res) => {
         padding: 12px 25px;
         border-radius: 8px;
         border: none;
-        background: #22c55e;
-        color: black;
+        background: black;
+        color: white;
         font-weight: bold;
         cursor: pointer;
-        transition: 0.3s;
       }
 
       .btn:hover {
-        background: #16a34a;
-        transform: scale(1.1);
-      }
-
-      .links a {
-        margin: 10px;
-        color: #38bdf8;
-        text-decoration: none;
-        font-weight: bold;
+        background: white;
+        color: black;
       }
 
       .footer {
-        margin-top: 50px;
-        color: #64748b;
-      }
-
-      @keyframes fadeDown {
-        from { opacity: 0; transform: translateY(-40px); }
-        to { opacity: 1; transform: translateY(0); }
+        margin-top: 40px;
+        color: #e2e8f0;
       }
     </style>
   </head>
@@ -151,46 +145,41 @@ app.get("/", (req, res) => {
 
     <div class="container">
 
+      <img class="profile-img" src="https://i.pravatar.cc/300" />
+
       <h1>🚀 Prajwal S P</h1>
-      <h2>DevOps Engineer</h2>
+      <h2>DevOps Engineer | Cloud | Kubernetes</h2>
 
-      <p class="tagline">
-        Building scalable systems • Automating deployments • Cloud-first mindset
-      </p>
-
-      <div class="section card">
+      <div class="card">
         <h3>💡 About Me</h3>
         <p>
-          Passionate DevOps Engineer focused on CI/CD, Kubernetes, and cloud infrastructure.
-          I build real-world production pipelines and scalable systems.
+          I design scalable cloud systems, automate deployments,
+          and build real-world DevOps pipelines.
         </p>
       </div>
 
-      <div class="section card skills">
+      <div class="card skills">
         <h3>🛠 Skills</h3>
         <span>AWS</span>
         <span>Docker</span>
         <span>Kubernetes</span>
         <span>Terraform</span>
         <span>CI/CD</span>
-        <span>GitHub Actions</span>
       </div>
 
-      <div class="section">
+      <div class="card">
         <h3>📂 Projects</h3>
         ${generateProjects()}
       </div>
 
-      <button class="btn" onclick="alert('🚀 Deployed using full DevOps pipeline!')">
+      <div class="card">
+        <h3>🎥 DevOps Demo</h3>
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+      </div>
+
+      <button class="btn" onclick="alert('🚀 Fully automated CI/CD to Kubernetes!')">
         View Deployment Info
       </button>
-
-      <div class="links">
-        <p>
-          🔗 <a href="#">GitHub</a> | 
-          <a href="#">LinkedIn</a>
-        </p>
-      </div>
 
       <div class="footer">
         <p>⚡ Built & Deployed by Prajwal S P</p>
