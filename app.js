@@ -1,34 +1,28 @@
 const express = require("express");
 const app = express();
 
-// 🔥 Dynamic projects data
 const projects = [
   {
-    name: "DevOps CI/CD Pipeline",
-    desc: "Automated pipeline using GitHub Actions, Docker, and AWS",
+    name: "🚀 DevOps CI/CD Pipeline",
+    desc: "Automated CI/CD using GitHub Actions, Docker & AWS",
   },
   {
-    name: "EKS Kubernetes Deployment",
-    desc: "Deployed scalable app using Kubernetes on AWS EKS",
+    name: "☸️ Kubernetes on EKS",
+    desc: "Deployed scalable application using AWS EKS",
   },
   {
-    name: "Terraform Infra Setup",
-    desc: "Provisioned AWS infrastructure using Terraform",
+    name: "🏗 Terraform Infrastructure",
+    desc: "Provisioned AWS infra using Infrastructure as Code",
   },
 ];
 
-// Generate project cards dynamically
 function generateProjects() {
-  return projects
-    .map(
-      (p) => `
-      <div class="card fade-in">
-        <h3>${p.name}</h3>
-        <p>${p.desc}</p>
-      </div>
-    `
-    )
-    .join("");
+  return projects.map(p => `
+    <div class="project-card">
+      <h3>${p.name}</h3>
+      <p>${p.desc}</p>
+    </div>
+  `).join("");
 }
 
 app.get("/", (req, res) => {
@@ -41,52 +35,88 @@ app.get("/", (req, res) => {
       body {
         margin: 0;
         font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #020617, #0f172a);
+        background: linear-gradient(-45deg, #020617, #0f172a, #1e293b, #020617);
+        background-size: 400% 400%;
+        animation: gradient 10s ease infinite;
         color: white;
-        overflow-x: hidden;
-      }
-
-      .container {
-        padding: 40px;
         text-align: center;
       }
 
+      @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      .container {
+        padding: 50px 20px;
+      }
+
       h1 {
-        font-size: 3rem;
+        font-size: 3.5rem;
         color: #38bdf8;
-        animation: slideDown 1s ease;
+        animation: fadeDown 1s ease;
       }
 
       h2 {
         color: #94a3b8;
-        animation: fadeIn 2s ease;
+        margin-bottom: 30px;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+        margin-bottom: 40px;
+        color: #cbd5f5;
+      }
+
+      .section {
+        margin: 40px auto;
+        max-width: 900px;
       }
 
       .card {
-        background: #1e293b;
-        margin: 20px auto;
-        padding: 20px;
+        background: rgba(30, 41, 59, 0.8);
+        padding: 25px;
         border-radius: 15px;
-        width: 80%;
-        box-shadow: 0px 10px 30px rgba(0,0,0,0.6);
-        transition: transform 0.3s ease;
+        margin: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        backdrop-filter: blur(10px);
+        transition: 0.3s;
       }
 
       .card:hover {
-        transform: scale(1.05);
+        transform: translateY(-10px) scale(1.02);
       }
 
-      .highlight {
-        color: #22c55e;
+      .skills span {
+        display: inline-block;
+        margin: 8px;
+        padding: 8px 15px;
+        background: #38bdf8;
+        color: black;
+        border-radius: 20px;
         font-weight: bold;
+      }
+
+      .project-card {
+        background: #1e293b;
+        margin: 15px;
+        padding: 20px;
+        border-radius: 12px;
+        transition: 0.3s;
+      }
+
+      .project-card:hover {
+        background: #334155;
+        transform: scale(1.05);
       }
 
       .btn {
         margin-top: 20px;
-        padding: 12px 20px;
-        border: none;
+        padding: 12px 25px;
         border-radius: 8px;
-        background: #38bdf8;
+        border: none;
+        background: #22c55e;
         color: black;
         font-weight: bold;
         cursor: pointer;
@@ -94,30 +124,26 @@ app.get("/", (req, res) => {
       }
 
       .btn:hover {
-        background: #0ea5e9;
+        background: #16a34a;
         transform: scale(1.1);
       }
 
+      .links a {
+        margin: 10px;
+        color: #38bdf8;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
       .footer {
-        margin-top: 40px;
+        margin-top: 50px;
         color: #64748b;
       }
 
-      /* Animations */
-      @keyframes slideDown {
-        from { transform: translateY(-50px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+      @keyframes fadeDown {
+        from { opacity: 0; transform: translateY(-40px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-
-      .fade-in {
-        animation: fadeIn 1.5s ease;
-      }
-
     </style>
   </head>
 
@@ -126,35 +152,45 @@ app.get("/", (req, res) => {
     <div class="container">
 
       <h1>🚀 Prajwal S P</h1>
-      <h2>DevOps Engineer | AWS | Kubernetes | CI/CD</h2>
+      <h2>DevOps Engineer</h2>
 
-      <div class="card fade-in">
+      <p class="tagline">
+        Building scalable systems • Automating deployments • Cloud-first mindset
+      </p>
+
+      <div class="section card">
         <h3>💡 About Me</h3>
         <p>
-          I build scalable, automated, and production-ready systems using modern DevOps tools.
+          Passionate DevOps Engineer focused on CI/CD, Kubernetes, and cloud infrastructure.
+          I build real-world production pipelines and scalable systems.
         </p>
       </div>
 
-      <div class="card fade-in">
+      <div class="section card skills">
         <h3>🛠 Skills</h3>
-        <p>AWS | Docker | Kubernetes | Terraform | GitHub Actions | Linux</p>
+        <span>AWS</span>
+        <span>Docker</span>
+        <span>Kubernetes</span>
+        <span>Terraform</span>
+        <span>CI/CD</span>
+        <span>GitHub Actions</span>
       </div>
 
-      <div class="card fade-in">
-        <h3>🔥 Live DevOps Project</h3>
-        <p>
-          This app is deployed using 
-          <span class="highlight">Docker + Kubernetes (EKS) + CI/CD Pipeline</span>
-        </p>
+      <div class="section">
+        <h3>📂 Projects</h3>
+        ${generateProjects()}
       </div>
-
-      <h2>📂 Projects</h2>
-
-      ${generateProjects()}
 
       <button class="btn" onclick="alert('🚀 Deployed using full DevOps pipeline!')">
-        See Deployment Info
+        View Deployment Info
       </button>
+
+      <div class="links">
+        <p>
+          🔗 <a href="#">GitHub</a> | 
+          <a href="#">LinkedIn</a>
+        </p>
+      </div>
 
       <div class="footer">
         <p>⚡ Built & Deployed by Prajwal S P</p>
