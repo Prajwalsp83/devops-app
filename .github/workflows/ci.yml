@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # 🔥 Create version tag
+    # Create version tag
     - name: Set Image Tag
       run: echo "IMAGE_TAG=v${{ github.run_number }}" >> $GITHUB_ENV
 
@@ -26,7 +26,7 @@ jobs:
     - name: Push Docker Image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}
 
-    # ✅ KEEP EC2 DEPLOYMENT (unchanged)
+    # EC2 deployment (unchanged)
     - name: Deploy to EC2
       run: |
         echo "${{ secrets.EC2_KEY }}" > key.pem
@@ -43,10 +43,10 @@ jobs:
 
         EOF
 
-    # 🔥 Update K8s repo
+    # Update K8s repo
     - name: Update K8s Repo
       run: |
-        git clone https://${{ secrets.PAT_TOKEN }}@github.com/YOUR_USERNAME/devops-k8s-manifests.git
+        git clone https://${{ secrets.PAT_TOKEN }}@github.com/prajwalsp83/devops-k8s-manifests.git
         cd devops-k8s-manifests
 
         sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}|" deployment.yaml
@@ -58,11 +58,11 @@ jobs:
         git commit -m "Update image to ${{ env.IMAGE_TAG }}"
         git push
 
-    # 🔥 Trigger K8s deployment
+    # Trigger K8s deployment
     - name: Trigger K8s Deployment
       run: |
         curl -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-          https://api.github.com/repos/YOUR_USERNAME/devops-k8s-manifests/dispatches \
+          https://api.github.com/repos/prajwalsp83/devops-k8s-manifests/dispatches \
           -d '{"event_type":"deploy"}'
