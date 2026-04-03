@@ -4,7 +4,7 @@ const app = express();
 const projects = [
   {
     name: "🚀 CI/CD Pipeline",
-    desc: "GitHub Actions + Docker + AWS automation",
+    desc: "Automated CI/CD using GitHub Actions, Docker & AWS",
     img: "https://images.unsplash.com/photo-1605902711622-cfb43c4437d1"
   },
   {
@@ -13,8 +13,8 @@ const projects = [
     img: "https://images.unsplash.com/photo-1629654297299-c8506221ca97"
   },
   {
-    name: "🏗 Terraform Infra",
-    desc: "Provisioned infrastructure using Terraform",
+    name: "🏗 Terraform Infrastructure",
+    desc: "Provisioned AWS infra using Terraform",
     img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31"
   }
 ];
@@ -40,7 +40,6 @@ app.get("/", (req, res) => {
         margin: 0;
         font-family: 'Segoe UI', sans-serif;
         color: white;
-        overflow-x: hidden;
         background: linear-gradient(270deg, #0ea5e9, #9333ea, #22c55e, #f59e0b);
         background-size: 800% 800%;
         animation: gradientMove 12s ease infinite;
@@ -58,30 +57,33 @@ app.get("/", (req, res) => {
       }
 
       h1 {
-        font-size: 3.5rem;
-        margin-bottom: 10px;
+        font-size: 3.2rem;
       }
 
       h2 {
         color: #e2e8f0;
       }
 
-      .profile-img {
-        width: 150px;
-        height: 150px;
+      /* DevOps Avatar */
+      .avatar {
+        width: 140px;
+        height: 140px;
+        margin: 20px auto;
         border-radius: 50%;
-        margin: 20px;
-        border: 4px solid white;
+        background: linear-gradient(135deg, #38bdf8, #22c55e);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       }
 
       .card {
-        background: rgba(0,0,0,0.4);
-        backdrop-filter: blur(10px);
+        background: rgba(0,0,0,0.5);
         margin: 20px auto;
         padding: 20px;
         border-radius: 15px;
         width: 85%;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       }
 
       .skills span {
@@ -95,9 +97,9 @@ app.get("/", (req, res) => {
       }
 
       .project-card {
-        background: rgba(0,0,0,0.5);
         margin: 20px;
         padding: 15px;
+        background: rgba(0,0,0,0.6);
         border-radius: 12px;
         transition: 0.3s;
       }
@@ -115,28 +117,10 @@ app.get("/", (req, res) => {
         width: 90%;
         height: 400px;
         border-radius: 12px;
-        margin-top: 20px;
-      }
-
-      .btn {
-        margin-top: 20px;
-        padding: 12px 25px;
-        border-radius: 8px;
-        border: none;
-        background: black;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      .btn:hover {
-        background: white;
-        color: black;
       }
 
       .footer {
         margin-top: 40px;
-        color: #e2e8f0;
       }
     </style>
   </head>
@@ -145,16 +129,17 @@ app.get("/", (req, res) => {
 
     <div class="container">
 
-      <img class="profile-img" src="https://i.pravatar.cc/300" />
+      <!-- 🔥 DevOps Avatar -->
+      <div class="avatar">⚙️</div>
 
       <h1>🚀 Prajwal S P</h1>
-      <h2>DevOps Engineer | Cloud | Kubernetes</h2>
+      <h2>DevOps Engineer | AWS | Kubernetes</h2>
 
       <div class="card">
         <h3>💡 About Me</h3>
         <p>
-          I design scalable cloud systems, automate deployments,
-          and build real-world DevOps pipelines.
+          I build scalable cloud systems, automate deployments,
+          and design production-grade DevOps pipelines.
         </p>
       </div>
 
@@ -174,12 +159,8 @@ app.get("/", (req, res) => {
 
       <div class="card">
         <h3>🎥 DevOps Demo</h3>
-        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+        <iframe src="https://www.youtube.com/embed/j5Zsa_eOXeY"></iframe>
       </div>
-
-      <button class="btn" onclick="alert('🚀 Fully automated CI/CD to Kubernetes!')">
-        View Deployment Info
-      </button>
 
       <div class="footer">
         <p>⚡ Built & Deployed by Prajwal S P</p>
