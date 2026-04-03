@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Hello we r live now rcb 🚀 Version 2');
+  res.send('rcbb tickets dm me 🚀 Version 2');
 });
 
 app.listen(3000, () => {
