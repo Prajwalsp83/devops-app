@@ -8,7 +8,7 @@ const projects = [
     img: "https://images.unsplash.com/photo-1605902711622-cfb43c4437d1"
   },
   {
-    name: "☸️ Kubernetes Deployment",
+    name: "☸️ Kubernetes Deployments",
     desc: "Deployed scalable app on AWS EKS",
     img: "https://images.unsplash.com/photo-1629654297299-c8506221ca97"
   },
