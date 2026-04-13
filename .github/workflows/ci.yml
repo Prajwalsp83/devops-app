@@ -1,98 +1,103 @@
 name: CI-CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
+push:
+branches:
+- main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+deploy:
+runs-on: ubuntu-latest
 
-    steps:
+```
+steps:
 
-    # 1️⃣ Checkout Code
-    - name: Checkout Code
-      uses: actions/checkout@v3
+# 1️⃣ Checkout Code
+- name: Checkout Code
+  uses: actions/checkout@v3
 
-    # 2️⃣ Set Image Tag
-    - name: Set Image Tag
-      run: echo "IMAGE_TAG=v${{ github.run_number }}" >> $GITHUB_ENV
+# 2️⃣ Set Image Tag
+- name: Set Image Tag
+  run: echo "IMAGE_TAG=v${{ github.run_number }}" >> $GITHUB_ENV
 
-    # 3️⃣ Login to DockerHub
-    - name: Login to DockerHub
-      run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+# 3️⃣ Login to DockerHub
+- name: Login to DockerHub
+  run: |
+    echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    # 4️⃣ Build Docker Image
-    - name: Build Docker Image
-      run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }} .
+# 4️⃣ Build Docker Image
+- name: Build Docker Image
+  run: |
+    docker build -t ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }} .
 
-    # 5️⃣ Push Docker Image
-    - name: Push Docker Image
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}
+# 5️⃣ Push Docker Image
+- name: Push Docker Image
+  run: |
+    docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}
 
-    # 6️⃣ Deploy to EC2 (FIXED)
-    - name: Deploy to EC2
-      run: |
-        echo "${{ secrets.EC2_KEY }}" > key.pem
-        chmod 600 key.pem
+# 🔥 NEW: Setup SSH properly
+- name: Setup SSH
+  run: |
+    mkdir -p ~/.ssh
+    echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_ed25519
+    chmod 600 ~/.ssh/id_ed25519
+    ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-        ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
+# 6️⃣ Deploy to EC2 (FIXED)
+- name: Deploy to EC2
+  run: |
+    ssh -i ~/.ssh/id_ed25519 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
 
-        echo "🔧 Checking Docker..."
+    echo "🔧 Checking Docker..."
 
-        if ! command -v docker > /dev/null 2>&1; then
-          echo "🚀 Installing Docker..."
-          sudo apt update
-          sudo apt install -y docker.io
-          sudo systemctl start docker
-          sudo systemctl enable docker
-        else
-          echo "✅ Docker already installed"
-        fi
+    if ! command -v docker > /dev/null 2>&1; then
+      echo "🚀 Installing Docker..."
+      sudo apt update
+      sudo apt install -y docker.io
+      sudo systemctl start docker
+      sudo systemctl enable docker
+    else
+      echo "✅ Docker already installed"
+    fi
 
-        echo "🔐 Fixing Docker permissions..."
-        sudo usermod -aG docker ubuntu
+    echo "🧹 Cleaning old container..."
+    sudo docker stop app || true
+    sudo docker rm app || true
 
-        echo "🧹 Cleaning old container..."
-        sudo docker stop app || true
-        sudo docker rm app || true
+    echo "📥 Pulling latest image..."
+    sudo docker pull ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}
 
-        echo "📥 Pulling latest image..."
-        sudo docker pull ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}
+    echo "🚀 Starting container..."
+    sudo docker run -d -p 3000:3000 --name app \
+      ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}
 
-        echo "🚀 Starting container..."
-        sudo docker run -d -p 3000:3000 --name app ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}
+    EOF
 
-        EOF
+# 7️⃣ Update K8s Repo
+- name: Update K8s Repo
+  run: |
+    git clone https://${{ secrets.PAT_TOKEN }}@github.com/prajwalsp83/devops-k8s-manifests.git
+    cd devops-k8s-manifests
 
-    ## 7️⃣ Update K8s Repo
-    - name: Update K8s Repo
-      run: |
-        git clone https://${{ secrets.PAT_TOKEN }}@github.com/prajwalsp83/devops-k8s-manifests.git
-        cd devops-k8s-manifests
+    echo "✏️ Updating deployment.yaml..."
 
-        echo "✏️ Updating deployment.yaml..."
+    sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}|" deployment.yaml
 
-        sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ env.IMAGE_TAG }}|" deployment.yaml
+    git config user.name "github-actions"
+    git config user.email "actions@github.com"
 
-        git config user.name "github-actions"
-        git config user.email "actions@github.com"
+    git add .
+    git commit -m "🚀 Update image to ${{ env.IMAGE_TAG }}" || echo "No changes"
+    git push
 
-        git add .
-        git commit -m "🚀 Update image to ${{ env.IMAGE_TAG }}" || echo "No changes"
-        git push
+# 8️⃣ Trigger K8s Deployment
+- name: Trigger K8s Deployment
+  run: |
+    echo "🚀 Triggering K8s deployment..."
 
-    # 8️⃣ Trigger K8s Deployment
-    - name: Trigger K8s Deployment
-      run: |
-        echo "🚀 Triggering K8s deployment..."
-
-        curl -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-          https://api.github.com/repos/prajwalsp83/devops-k8s-manifests/dispatches \
-          -d '{"event_type":"deploy"}'
+    curl -X POST \
+      -H "Accept: application/vnd.github+json" \
+      -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+      https://api.github.com/repos/prajwalsp83/devops-k8s-manifests/dispatches \
+      -d '{"event_type":"deploy"}'
+```
