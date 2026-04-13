@@ -99,4 +99,3 @@ steps:
       -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
       https://api.github.com/repos/prajwalsp83/devops-k8s-manifests/dispatches \
       -d '{"event_type":"deploy"}'
-```
