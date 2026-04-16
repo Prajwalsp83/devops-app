@@ -56,12 +56,12 @@ jobs:
       working-directory: terraform
       run: terraform apply -auto-approve
 
-    # 🔥 FIXED: Get EC2 Public IP
+    # 🔥 FINAL FIX: Get EC2 IP (no formatting issue)
     - name: Get EC2 IP
       working-directory: terraform
       run: |
-        IP=$(terraform output -raw public_ip | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}')
-        echo "EC2_IP=$IP" >> $GITHUB_ENV
+        IP=$(terraform output -raw public_ip)
+        echo "EC2_IP=$IP" | tee -a $GITHUB_ENV
 
     # ⏳ Wait for EC2
     - name: Wait for EC2
